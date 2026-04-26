@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#00f0ff">
+<title>BHVSY OS — Access</title>
+<link href="[fonts.googleapis.com](https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@600;700;800&family=JetBrains+Mono:wght@400;600&display=swap)" rel="stylesheet">
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{--bg-void:#030308;--accent-cyan:#00f0ff;--accent-purple:#8b5cf6;--accent-pink:#ec4899;--text-primary:#f0f4ff;--text-secondary:#94a3b8;--text-muted:#475569;--glass-bg:rgba(255,255,255,.025);--glass-border:rgba(255,255,255,.07);--radius:14px}
+body{font-family:'Inter',sans-serif;background:var(--bg-void);color:var(--text-primary);min-height:100vh;display:flex;align-items:center;justify-content:center;overflow:hidden}
+.bg-orbs{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden}
+.bg-orb{position:absolute;border-radius:50%;filter:blur(100px);opacity:.3}
+.bg-orb-1{width:500px;height:500px;background:radial-gradient(circle,rgba(0,240,255,.22),transparent 70%);top:-8%;left:-4%;animation:o1 25s ease-in-out infinite}
+.bg-orb-2{width:420px;height:420px;background:radial-gradient(circle,rgba(139,92,246,.25),transparent 70%);top:42%;right:-8%;animation:o2 30s ease-in-out infinite}
+.bg-orb-3{width:380px;height:380px;background:radial-gradient(circle,rgba(236,72,153,.18),transparent 70%);bottom:-12%;left:28%;animation:o3 22s ease-in-out infinite}
+@keyframes o1{0%,100%{transform:translate(0,0)}50%{transform:translate(60px,90px)}}
+@keyframes o2{0%,100%{transform:translate(0,0)}50%{transform:translate(-70px,50px)}}
+@keyframes o3{0%,100%{transform:translate(0,0)}50%{transform:translate(50px,-50px)}}
+.bg-grid{position:fixed;inset:0;z-index:0;pointer-events:none;background-image:linear-gradient(rgba(255,255,255,.012) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.012) 1px,transparent 1px);background-size:80px 80px}
+.login-wrap{position:relative;z-index:1;width:100%;max-width:420px;padding:24px}
+.login-card{background:var(--glass-bg);border:1px solid var(--glass-border);border-radius:20px;padding:44px 36px;backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px)}
+.brand{font-family:'Space Grotesk',sans-serif;font-size:1.6rem;font-weight:800;color:var(--accent-cyan);letter-spacing:3px;text-align:center;margin-bottom:6px}
+.brand-sub{text-align:center;font-size:.78rem;color:var(--text-muted);letter-spacing:1px;text-transform:uppercase;margin-bottom:36px}
+.lock-icon{font-size:2.6rem;text-align:center;margin-bottom:20px;filter:drop-shadow(0 0 16px rgba(0,240,255,.4))}
+.field-label{font-size:.74rem;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;color:var(--text-secondary);margin-bottom:10px;display:block}
+.code-input{width:100%;padding:16px 18px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);border-radius:var(--radius);color:var(--accent-cyan);font-family:'JetBrains Mono',monospace;font-size:1.2rem;letter-spacing:6px;text-align:center;outline:none;transition:all .3s ease;margin-bottom:20px}
+.code-input:hover,.code-input:focus{background:rgba(255,255,255,.07);border-color:rgba(0,240,255,.3);box-shadow:0 0 0 3px rgba(0,240,255,.07)}
+.code-input::placeholder{color:var(--text-muted);letter-spacing:2px;font-size:.9rem}
+.btn-enter{width:100%;padding:15px;background:linear-gradient(135deg,var(--accent-cyan),var(--accent-purple));border:none;border-radius:var(--radius);color:var(--bg-void);font-weight:800;font-size:.95rem;cursor:pointer;transition:all .3s ease;letter-spacing:.5px;display:flex;align-items:center;justify-content:center;gap:10px}
+.btn-enter:hover{transform:translateY(-2px);box-shadow:0 12px 30px rgba(0,240,255,.25)}
+.btn-enter:disabled{opacity:.6;cursor:not-allowed;transform:none}
+.error-msg{background:rgba(255,0,110,.1);border:1px solid rgba(255,0,110,.25);color:#ff006e;padding:12px 14px;border-radius:var(--radius);font-size:.85rem;margin-bottom:16px;text-align:center;display:none}
+.spinner{width:16px;height:16px;border-radius:50%;border:2px solid rgba(3,3,8,.5);border-top-color:transparent;animation:spin .7s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.hint{text-align:center;font-size:.74rem;color:var(--text-muted);margin-top:24px}
+.shake{animation:shake .4s ease}
+@keyframes shake{0%,100%{transform:translateX(0)}20%,60%{transform:translateX(-8px)}40%,80%{transform:translateX(8px)}}
+</style>
+</head>
+<body>
+
+<div class="bg-orbs">
+  <div class="bg-orb bg-orb-1"></div>
+  <div class="bg-orb bg-orb-2"></div>
+  <div class="bg-orb bg-orb-3"></div>
+</div>
+<div class="bg-grid"></div>
+
+<div class="login-wrap">
+  <div class="login-card">
+    <div class="lock-icon">🔐</div>
+    <div class="brand">BHVSY OS</div>
+    <div class="brand-sub">by Bhavishya Parjapati</div>
+
+    <label class="field-label" for="code">Access Code</label>
+    <div id="error" class="error-msg">Invalid access code. Try again.</div>
+    <input
+      id="code"
+      class="code-input"
+      type="password"
+      placeholder="• • • • • •"
+      maxlength="30"
+      autocomplete="off"
+      onkeydown="if(event.key==='Enter')unlock()"
+    />
+    <button class="btn-enter" id="btn" onclick="unlock()">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg>
+      Enter
+    </button>
+    <p class="hint">Authorized access only</p>
+  </div>
+</div>
+
+<script type="module">
+  import { initializeApp } from "[gstatic.com](https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js)";
+  import { getAuth, signInAnonymously, onAuthStateChanged } from "[gstatic.com](https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js)";
+
+  // ── YOUR FIREBASE CONFIG ──────────────────────────────
+  const firebaseConfig = {
+    apiKey: "YOUR_API_KEY",
+    authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
+    projectId: "YOUR_PROJECT_ID",
+    storageBucket: "YOUR_PROJECT_ID.appspot.com",
+    messagingSenderId: "YOUR_SENDER_ID",
+    appId: "YOUR_APP_ID"
+  };
+  // ─────────────────────────────────────────────────────
+
+  // ── SET YOUR SECRET CODE HERE ─────────────────────────
+  const SECRET_CODE = "bhvsy2025";   // ← change this to whatever you want
+  // ─────────────────────────────────────────────────────
+
+  const app  = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+
+  // If already authenticated, go straight to the tool
+  onAuthStateChanged(auth, user => {
+    if (user) window.location.href = "index.html";
+  });
+
+  window.unlock = async function () {
+    const input = document.getElementById("code").value.trim();
+    const errEl = document.getElementById("error");
+    const btn   = document.getElementById("btn");
+    const codeEl = document.getElementById("code");
+
+    if (!input) return;
+
+    if (input !== SECRET_CODE) {
+      errEl.style.display = "block";
+      codeEl.value = "";
+      codeEl.classList.remove("shake");
+      void codeEl.offsetWidth; // reflow to restart animation
+      codeEl.classList.add("shake");
+      codeEl.addEventListener("animationend", () => codeEl.classList.remove("shake"), { once: true });
+      return;
+    }
+
+    errEl.style.display = "none";
+    btn.disabled = true;
+    btn.innerHTML = '<span class="spinner"></span> Authenticating...';
+
+    try {
+      await signInAnonymously(auth);
+      // onAuthStateChanged will fire and redirect
+    } catch (e) {
+      btn.disabled = false;
+      btn.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg> Enter';
+      errEl.textContent = "Auth error: " + e.message;
+      errEl.style.display = "block";
+    }
+  };
+</script>
+</body>
+</html>
