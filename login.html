@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="theme-color" content="#00f0ff">
 <title>BHVSY OS — Access</title>
-<link href="[fonts.googleapis.com](https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@600;700;800&family=JetBrains+Mono:wght@400;600&display=swap)" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
 <style>
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
 :root{--bg-void:#030308;--accent-cyan:#00f0ff;--accent-purple:#8b5cf6;--accent-pink:#ec4899;--text-primary:#f0f4ff;--text-secondary:#94a3b8;--text-muted:#475569;--glass-bg:rgba(255,255,255,.025);--glass-border:rgba(255,255,255,.07);--radius:14px}
@@ -74,10 +74,10 @@ body{font-family:'Inter',sans-serif;background:var(--bg-void);color:var(--text-p
 </div>
 
 <script type="module">
-  import { initializeApp } from "[gstatic.com](https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js)";
-  import { getAuth, signInAnonymously, onAuthStateChanged } from "[gstatic.com](https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js)";
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+  import { getAuth, signInWithEmailAndPassword, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
 
-  // ── YOUR FIREBASE CONFIG ──────────────────────────────
+  // PASTE YOUR FIREBASE CONFIG HERE
   const firebaseConfig = {
     apiKey: "YOUR_API_KEY",
     authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
@@ -86,18 +86,14 @@ body{font-family:'Inter',sans-serif;background:var(--bg-void);color:var(--text-p
     messagingSenderId: "YOUR_SENDER_ID",
     appId: "YOUR_APP_ID"
   };
-  // ─────────────────────────────────────────────────────
 
-  // ── SET YOUR SECRET CODE HERE ─────────────────────────
-  const SECRET_CODE = "bhvsy2025";   // ← change this to whatever you want
-  // ─────────────────────────────────────────────────────
+  const DUMMY_EMAIL = "admin@bhvsy-os.com"; 
 
   const app  = initializeApp(firebaseConfig);
   const auth = getAuth(app);
 
-  // If already authenticated, go straight to the tool
   onAuthStateChanged(auth, user => {
-    if (user) window.location.href = "index.html";
+    if (user) window.location.href = "hhiiiii.html"; // Redirects to your main page
   });
 
   window.unlock = async function () {
@@ -108,28 +104,22 @@ body{font-family:'Inter',sans-serif;background:var(--bg-void);color:var(--text-p
 
     if (!input) return;
 
-    if (input !== SECRET_CODE) {
-      errEl.style.display = "block";
-      codeEl.value = "";
-      codeEl.classList.remove("shake");
-      void codeEl.offsetWidth; // reflow to restart animation
-      codeEl.classList.add("shake");
-      codeEl.addEventListener("animationend", () => codeEl.classList.remove("shake"), { once: true });
-      return;
-    }
-
     errEl.style.display = "none";
     btn.disabled = true;
     btn.innerHTML = '<span class="spinner"></span> Authenticating...';
 
     try {
-      await signInAnonymously(auth);
-      // onAuthStateChanged will fire and redirect
+      await signInWithEmailAndPassword(auth, DUMMY_EMAIL, input);
     } catch (e) {
       btn.disabled = false;
       btn.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg> Enter';
-      errEl.textContent = "Auth error: " + e.message;
+      errEl.textContent = "Invalid access code. Try again.";
       errEl.style.display = "block";
+      codeEl.value = "";
+      codeEl.classList.remove("shake");
+      void codeEl.offsetWidth; 
+      codeEl.classList.add("shake");
+      codeEl.addEventListener("animationend", () => codeEl.classList.remove("shake"), { once: true });
     }
   };
 </script>
