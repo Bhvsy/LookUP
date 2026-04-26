@@ -99,6 +99,27 @@ input[type=number]{-moz-appearance:textfield}
 .footer-text strong{color:var(--accent-cyan)}
 @media (max-width:600px){.tools-grid{grid-template-columns:1fr;gap:10px}.input-group{flex-direction:column}.btn-search{width:100%;justify-content:center}.result-row{flex-direction:column;gap:4px}.result-value{text-align:left}.nav-credit{display:none}}
 ::-webkit-scrollbar{width:5px}::-webkit-scrollbar-track{background:var(--bg-void)}::-webkit-scrollbar-thumb{background:rgba(0,240,255,.2);border-radius:3px}
+.btn-logout {
+  background: rgba(255, 0, 110, 0.1);
+  border: 1px solid rgba(255, 0, 110, 0.25);
+  color: #ff006e;
+  padding: 8px 14px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 0.8rem;
+  font-weight: 600;
+  font-family: 'Inter', sans-serif;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  letter-spacing: 0.5px;
+}
+.btn-logout:hover {
+  background: rgba(255, 0, 110, 0.2);
+  transform: translateY(-2px);
+}
+  
 </style>
 </head>
 <body>
@@ -113,9 +134,19 @@ input[type=number]{-moz-appearance:textfield}
 <nav class="navbar">
   <div class="nav-inner">
     <a href="#" class="nav-brand">BHVSY OS</a>
-    <span class="nav-credit">by <strong>Bhavishya Parjapati</strong></span>
+    
+    <div style="display: flex; align-items: center; gap: 20px;">
+      <span class="nav-credit">by <strong>Bhavishya Parjapati</strong></span>
+      
+      <button class="btn-logout" onclick="logout()">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+        Logout
+      </button>
+    </div>
+    
   </div>
 </nav>
+
 
 <section class="hero">
   <div class="hero-badge"><span class="hero-dot"></span> LOOKUP PLATFORM</div>
